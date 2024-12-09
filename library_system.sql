@@ -1,7 +1,8 @@
 create table authors(
     "id" number primary key,
     first_name varchar2(50) not null,
-    last_name varchar2(50) not null
+    last_name varchar2(50) not null,
+    email varchar2(100) unique not null
 );
 
 create table pushing_houses(
@@ -23,7 +24,7 @@ create table employees(
     "id" number primary key,
     first_name varchar2(50) not null,
     last_name varchar2(50) not null,
-    telephone_number varchar(10) not null,
+    telephone_number varchar(10) unique not null,
     position_id number not null,
     constraint fk_position_id foreign key (position_id) references positions("id")
 );
@@ -36,7 +37,7 @@ create table readers(
     "id" number primary key,
     first_name varchar2(50) not null,
     last_name varchar2(50) not null,
-    telephone_number varchar2(10)
+    telephone_number varchar2(10) unique not null
 );
 
 alter table readers
@@ -84,9 +85,9 @@ create sequence reader_seq start with 1 increment by 1;
 create sequence book_seq start with 1 increment by 1;
 create sequence browing_seq start with 1 increment by 1; 
 
-insert into authors ("id",first_name,last_name) values (author_seq.nextval,'Николай','Николаев');
-insert into authors ("id",first_name,last_name) values (author_seq.nextval,'Атанас','Генчев');
-insert into authors ("id",first_name,last_name) values (author_seq.nextval,'Иван','Калимаров');
+insert into authors ("id",first_name,last_name,email) values (author_seq.nextval,'Николай','Николаев','niki@gmail.com');
+insert into authors ("id",first_name,last_name,email) values (author_seq.nextval,'Атанас','Генчев','nasko@gmail.com');
+insert into authors ("id",first_name,last_name,email) values (author_seq.nextval,'Иван','Калимаров','vanko@gmail.com');
 
 insert into pushing_houses ("id","name") values (pushing_house_seq.nextval,'Кентавър');
 insert into pushing_houses ("id","name") values (pushing_house_seq.nextval,'Арес');
@@ -156,7 +157,8 @@ select
     b.is_present as "Налична",
     p."name" as "Издателство",
     g."name" as "Жанр",
-    a.first_name || ' ' || a.last_name as "Автор"
+    a.first_name || ' ' || a.last_name as "Автор",
+    a.email as "Емайл" 
 from books b
 join genres g on g."id" = b.genre_id
 join pushing_houses p on p."id" = b.pushing_house_id
@@ -169,7 +171,8 @@ select
     b.is_present as "Налична",
     p."name" as "Издателство",
     g."name" as "Жанр",
-    a.first_name || ' ' || a.last_name as "Автор"
+    a.first_name || ' ' || a.last_name as "Автор",
+    a.email as "Емайл"
 from books b
 join genres g on g."id" = b.genre_id
 join pushing_houses p on p."id" = b.pushing_house_id
@@ -182,7 +185,8 @@ select
     b.is_present as "Налична",
     p."name" as "Издателство",
     g."name" as "Жанр",
-    a.first_name || ' ' || a.last_name as "Автор"
+    a.first_name || ' ' || a.last_name as "Автор",
+    a.email as "Емейл"
 from books b
 join genres g on g."id" = b.genre_id
 join pushing_houses p on p."id" = b.pushing_house_id
@@ -195,6 +199,7 @@ select
     ph."name" as "Издателство",
     g."name" as "Жанр",
     a.first_name || ' ' || a.last_name as "Автор",
+    a.email as "Емейл",
     b.date_of_issue as "Дата на издаване",
     b.is_present as "Налична",
     br.browing_loan_date as "Дата на заемане",
@@ -217,13 +222,14 @@ select
     ph."name" as "Издателство",
     g."name" as "Жанр",
     a.first_name || ' ' || a.last_name as "Автор",
+    a.email as "Емейл",
     b.date_of_issue as "Дата на издаване",
     b.is_present as "Налична",
     br.browing_loan_date as "Дата на заемане",
     br."term" as "Дата на връщане",
     r.first_name || ' ' || r.last_name as "Заемател",
     e.first_name || ' ' || e.last_name as "Слижител",
-    p."name"
+    p."name" as "Позиция"
 from books_browings bb
 join books b on b."id" = bb.book_id
 join browings br on br."id" = bb.browing_id
